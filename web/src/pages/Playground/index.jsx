@@ -94,6 +94,7 @@ const Playground = () => {
     showSettings,
     models,
     groups,
+    groupModelsMap,
     status,
     message,
     debugData,
@@ -110,6 +111,7 @@ const Playground = () => {
     setShowSettings,
     setModels,
     setGroups,
+    setGroupModelsMap,
     setStatus,
     setMessage,
     setDebugData,
@@ -130,7 +132,7 @@ const Playground = () => {
   );
 
   // 数据加载
-  useDataLoader(userState, inputs, handleInputChange, setModels, setGroups);
+  useDataLoader(userState, inputs, handleInputChange, setModels, setGroups, setGroupModelsMap);
 
   // 消息编辑
   const {
@@ -475,6 +477,7 @@ const Playground = () => {
               parameterEnabled={parameterEnabled}
               models={models}
               groups={groups}
+              groupModelsMap={groupModelsMap}
               styleState={styleState}
               showSettings={showSettings}
               showDebugPanel={showDebugPanel}

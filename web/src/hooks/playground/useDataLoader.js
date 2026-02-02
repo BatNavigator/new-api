@@ -17,7 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { API, processModelsData, processGroupsData } from '../../helpers';
 import { API_ENDPOINTS } from '../../constants/playground.constants';
@@ -28,8 +28,10 @@ export const useDataLoader = (
   handleInputChange,
   setModels,
   setGroups,
+  setGroupModelsMap,
 ) => {
   const { t } = useTranslation();
+  const groupModelsMapRef = useRef({});
 
   const loadModels = useCallback(async () => {
     try {
@@ -80,16 +82,34 @@ export const useDataLoader = (
     }
   }, [userState, inputs.group, handleInputChange, setGroups, t]);
 
+  const loadGroupModelsMap = useCallback(async () => {
+    try {
+      const res = await API.get(API_ENDPOINTS.USER_GROUP_MODELS);
+      const { success, data } = res.data;
+
+      if (success && data) {
+        groupModelsMapRef.current = data;
+        if (setGroupModelsMap) {
+          setGroupModelsMap(data);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load group models mapping');
+    }
+  }, [setGroupModelsMap]);
+
   // 自动加载数据
   useEffect(() => {
     if (userState?.user) {
       loadModels();
       loadGroups();
+      loadGroupModelsMap();
     }
-  }, [userState?.user, loadModels, loadGroups]);
+  }, [userState?.user, loadModels, loadGroups, loadGroupModelsMap]);
 
   return {
     loadModels,
     loadGroups,
+    loadGroupModelsMap,
   };
 };

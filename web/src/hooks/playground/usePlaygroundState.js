@@ -78,6 +78,7 @@ export const usePlaygroundState = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [models, setModels] = useState([]);
   const [groups, setGroups] = useState([]);
+  const [groupModelsMap, setGroupModelsMap] = useState({});
   const [status, setStatus] = useState({});
 
   // 消息相关状态 - 使用加载的消息或默认消息初始化
@@ -252,6 +253,7 @@ export const usePlaygroundState = () => {
     showSettings,
     models,
     groups,
+    groupModelsMap,
     status,
 
     // 消息状态
@@ -280,6 +282,7 @@ export const usePlaygroundState = () => {
     setShowSettings,
     setModels,
     setGroups,
+    setGroupModelsMap,
     setStatus,
     setMessage,
     setDebugData,

@@ -597,6 +597,28 @@ func GetUserModels(c *gin.Context) {
 	return
 }
 
+func GetUserGroupModels(c *gin.Context) {
+	id := c.GetInt("id")
+	user, err := model.GetUserCache(id)
+	if err != nil {
+		common.ApiError(c, err)
+		return
+	}
+	groups := service.GetUserUsableGroups(user.Group)
+	groupModels := make(map[string][]string)
+	for group := range groups {
+		models := model.GetGroupEnabledModels(group)
+		if len(models) > 0 {
+			groupModels[group] = models
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    groupModels,
+	})
+}
+
 func UpdateUser(c *gin.Context) {
 	var updatedUser model.User
 	err := json.NewDecoder(c.Request.Body).Decode(&updatedUser)

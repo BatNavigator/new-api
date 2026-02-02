@@ -78,6 +78,7 @@ export const API_ENDPOINTS = {
   CHAT_COMPLETIONS: '/pg/chat/completions',
   USER_MODELS: '/api/user/models',
   USER_GROUPS: '/api/user/self/groups',
+  USER_GROUP_MODELS: '/api/user/group_models',
 };
 
 // ========== 配置默认值 ==========
