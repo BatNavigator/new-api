@@ -17,7 +17,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card, Select, Typography, Button, Switch } from '@douyinfe/semi-ui';
 import { Sparkles, Users, ToggleLeft, X, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +32,7 @@ const SettingsPanel = ({
   parameterEnabled,
   models,
   groups,
+  groupModelsMap,
   styleState,
   showDebugPanel,
   customRequestMode,
@@ -54,6 +55,58 @@ const SettingsPanel = ({
     showDebugPanel,
     customRequestMode,
     customRequestBody,
+  };
+
+  // Compute which models are available for the selected group
+  const availableModelsForGroup = useMemo(() => {
+    if (!groupModelsMap || !inputs.group) return null;
+    return groupModelsMap[inputs.group] || null;
+  }, [groupModelsMap, inputs.group]);
+
+  // Compute which groups contain the selected model
+  const availableGroupsForModel = useMemo(() => {
+    if (!groupModelsMap || !inputs.model) return null;
+    const result = [];
+    for (const [group, groupModels] of Object.entries(groupModelsMap)) {
+      if (groupModels.includes(inputs.model)) {
+        result.push(group);
+      }
+    }
+    return result.length > 0 ? result : null;
+  }, [groupModelsMap, inputs.model]);
+
+  // Build model options with disabled state
+  const modelOptionsWithState = useMemo(() => {
+    if (!models || models.length === 0) return [];
+    if (!availableModelsForGroup) return models;
+
+    return models.map((m) => ({
+      ...m,
+      disabled: !availableModelsForGroup.includes(m.value),
+    }));
+  }, [models, availableModelsForGroup]);
+
+  // Build group options - no longer disable groups, allow free switching
+  const groupOptionsWithState = useMemo(() => {
+    if (!groups || groups.length === 0) return [];
+    return groups;
+  }, [groups]);
+
+  // Handle group change - auto-select first available model if current model is not in new group
+  const handleGroupChange = (newGroup) => {
+    onInputChange('group', newGroup);
+    
+    // Check if current model is available in the new group
+    if (groupModelsMap && newGroup && inputs.model) {
+      const modelsInNewGroup = groupModelsMap[newGroup] || [];
+      if (!modelsInNewGroup.includes(inputs.model)) {
+        // Current model not available in new group, select first available model
+        const firstAvailableModel = models.find(m => modelsInNewGroup.includes(m.value));
+        if (firstAvailableModel) {
+          onInputChange('model', firstAvailableModel.value);
+        }
+      }
+    }
   };
 
   return (
@@ -133,10 +186,10 @@ const SettingsPanel = ({
             selection
             filter={selectFilter}
             autoClearSearchValue={false}
-            onChange={(value) => onInputChange('group', value)}
+            onChange={handleGroupChange}
             value={inputs.group}
             autoComplete='new-password'
-            optionList={groups}
+            optionList={groupOptionsWithState}
             renderOptionItem={renderGroupOption}
             style={{ width: '100%' }}
             dropdownStyle={{ width: '100%', maxWidth: '100%' }}
@@ -168,7 +221,7 @@ const SettingsPanel = ({
             onChange={(value) => onInputChange('model', value)}
             value={inputs.model}
             autoComplete='new-password'
-            optionList={models}
+            optionList={modelOptionsWithState}
             style={{ width: '100%' }}
             dropdownStyle={{ width: '100%', maxWidth: '100%' }}
             className='!rounded-lg'
