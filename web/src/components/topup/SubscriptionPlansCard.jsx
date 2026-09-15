@@ -50,6 +50,7 @@ function getEpayMethods(payMethods = []) {
 
 // 提交易支付表单
 function submitEpayForm({ url, params }) {
+  if (!url) return;
   const form = document.createElement('form');
   form.action = url;
   form.method = 'POST';
@@ -67,6 +68,10 @@ function submitEpayForm({ url, params }) {
   document.body.appendChild(form);
   form.submit();
   document.body.removeChild(form);
+  if (isSafari) {
+    // Safari 不允许 form.submit() 打开新标签页，兜底再开一个窗口
+    window.open(url, '_blank');
+  }
 }
 
 const SubscriptionPlansCard = ({

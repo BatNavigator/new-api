@@ -48,6 +48,8 @@ export default function SettingsHeaderNavModules(props) {
     },
     docs: true,
     about: true,
+    huitu: true,
+    workbuddy: true,
   });
 
   // 处理顶栏模块配置变更
@@ -88,6 +90,8 @@ export default function SettingsHeaderNavModules(props) {
       },
       docs: true,
       about: true,
+      huitu: true,
+      workbuddy: true,
     };
     setHeaderNavModules(defaultModules);
     showSuccess(t('已重置为默认配置'));
@@ -154,6 +158,8 @@ export default function SettingsHeaderNavModules(props) {
           },
           docs: true,
           about: true,
+          huitu: true,
+          workbuddy: true,
         };
         setHeaderNavModules(defaultModules);
       }
@@ -187,6 +193,16 @@ export default function SettingsHeaderNavModules(props) {
       key: 'about',
       title: t('关于'),
       description: t('关于系统的详细信息'),
+    },
+    {
+      key: 'huitu',
+      title: t('画图网站'),
+      description: t('画图工具网站入口'),
+    },
+    {
+      key: 'workbuddy',
+      title: t('WorkBuddy 部署'),
+      description: t('一键将本站模型部署到 WorkBuddy 客户端'),
     },
   ];
 

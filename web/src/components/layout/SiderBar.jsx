@@ -47,6 +47,7 @@ const routerMap = {
   task: '/console/task',
   models: '/console/models',
   deployment: '/console/deployment',
+  workbuddy: '/console/workbuddy',
   playground: '/console/playground',
   personal: '/console/personal',
 };
@@ -88,6 +89,11 @@ const SiderBar = ({ onNavigate = () => {} }) => {
         text: t('使用日志'),
         itemKey: 'log',
         to: '/log',
+      },
+      {
+        text: t('WorkBuddy 部署'),
+        itemKey: 'workbuddy',
+        to: '/workbuddy',
       },
       {
         text: t('绘图日志'),

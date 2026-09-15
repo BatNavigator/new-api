@@ -43,6 +43,7 @@ import Pricing from './pages/Pricing';
 import Task from './pages/Task';
 import ModelPage from './pages/Model';
 import ModelDeploymentPage from './pages/ModelDeployment';
+import WorkBuddyPage from './pages/WorkBuddy';
 import Playground from './pages/Playground';
 import Subscription from './pages/Subscription';
 import OAuth2Callback from './components/auth/OAuth2Callback';
@@ -121,6 +122,14 @@ function App() {
             <AdminRoute>
               <ModelDeploymentPage />
             </AdminRoute>
+          }
+        />
+        <Route
+          path='/console/workbuddy'
+          element={
+            <PrivateRoute>
+              <WorkBuddyPage />
+            </PrivateRoute>
           }
         />
         <Route

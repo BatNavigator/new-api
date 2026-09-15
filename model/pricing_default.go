@@ -67,6 +67,32 @@ var defaultVendorIcons = map[string]string{
 	"Azure":      "AzureAI",
 }
 
+// InferVendorNameByKeywords 依据模型名关键词推断供应商名称。
+// 规则与 initDefaultVendorMapping 使用的 defaultVendorRules 保持一致，
+// 供「模型元数据未显式配置供应商」的场景做兜底推断。
+// 未命中任何规则时返回空字符串。
+//
+// 注意：map 遍历顺序随机，当模型名同时命中多个规则时（例如 "glm-4-chat"），
+// 这里按「最长模式优先」挑选，保证结果稳定且更贴近真实厂商。
+func InferVendorNameByKeywords(modelName string) string {
+	lowerName := strings.ToLower(strings.TrimSpace(modelName))
+	if lowerName == "" {
+		return ""
+	}
+	bestPattern := ""
+	bestVendor := ""
+	for pattern, vendorName := range defaultVendorRules {
+		if !strings.Contains(lowerName, pattern) {
+			continue
+		}
+		if len(pattern) > len(bestPattern) {
+			bestPattern = pattern
+			bestVendor = vendorName
+		}
+	}
+	return bestVendor
+}
+
 // initDefaultVendorMapping 简化的默认供应商映射
 func initDefaultVendorMapping(metaMap map[string]*Model, vendorMap map[int]*Vendor, enableAbilities []AbilityWithChannel) {
 	for _, ability := range enableAbilities {

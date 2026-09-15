@@ -29,6 +29,7 @@ export const useNavigation = (t, docsLink, headerNavModules) => {
       docs: true,
       about: true,
       huitu: true,
+      workbuddy: true,
     };
 
     // 使用传入的配置或默认配置
@@ -71,6 +72,11 @@ export const useNavigation = (t, docsLink, headerNavModules) => {
         isExternal: true,
         externalLink: '/huitu.html',
       },
+      {
+        text: t('WorkBuddy 部署'),
+        itemKey: 'workbuddy',
+        to: '/console/workbuddy',
+      },
     ];
 
     // 根据配置过滤导航链接
@@ -83,6 +89,10 @@ export const useNavigation = (t, docsLink, headerNavModules) => {
         return typeof modules.pricing === 'object'
           ? modules.pricing.enabled
           : modules.pricing;
+      }
+      if (link.itemKey === 'workbuddy') {
+        // 兼容旧配置：管理员未显式配置时默认显示
+        return modules.workbuddy === undefined ? true : modules.workbuddy === true;
       }
       return modules[link.itemKey] === true;
     });

@@ -27,3 +27,10 @@ data/
 .gomodcache/
 .gocache-temp
 .gopath
+
+# 本地构建产物 / 数据库备份（勿提交）
+*.exe.bak
+*.exe.prev
+*.exe~
+*.db.bak*
+web/vite.config.js.timestamp-*.mjs

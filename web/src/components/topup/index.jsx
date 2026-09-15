@@ -225,8 +225,12 @@ const TopUp = () => {
             window.open(data.pay_link, '_blank');
           } else {
             // 普通支付表单提交
-            let params = data;
+            let params = res.data.data || res.data;
             let url = res.data.url;
+            if (!url) {
+              showError(t('支付地址不可用'));
+              return;
+            }
             let form = document.createElement('form');
             form.action = url;
             form.method = 'POST';
@@ -246,6 +250,11 @@ const TopUp = () => {
             document.body.appendChild(form);
             form.submit();
             document.body.removeChild(form);
+            if (isSafari) {
+              // Safari 不允许 form.submit() 打开新标签页，
+              // 兜底：再开一个窗口，避免当前页被支付页替换后无法返回
+              window.open(url, '_blank');
+            }
           }
         } else {
           const errorMsg =
